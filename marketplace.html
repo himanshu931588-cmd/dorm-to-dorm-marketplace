@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marketplace - Dorm2Dorm</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+<body style="cursor: auto;">
+    <canvas id="bg-canvas"></canvas>
+    
+    <nav class="navbar" style="position: fixed; top: 0; width: 100%; z-index: 100; padding: 1.5rem 5vw;">
+        <div class="nav-content" style="display: flex; justify-content: space-between; align-items: center;">
+            <a href="index.html" class="logo hover-target" style="text-decoration: none; display: flex; align-items: center; gap: 8px;">
+                <div style="background: var(--accent); width: 35px; height: 35px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1.4rem; color: white; transform: rotate(-10deg); box-shadow: 0 4px 15px rgba(255,107,107,0.4);">D</div>
+                <span style="font-size: 1.6rem; font-weight: 800; color: white; letter-spacing: -0.5px;">Dorm<span style="color: var(--accent);">2</span>Dorm</span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link hover-target">Home</a>
+                <a href="noticeboard.html" class="nav-link hover-target" style="color: #4ade80;">Drop & Split</a>
+                <a href="sell.html" class="btn-primary hover-target">Sell Item</a>
+            </div>
+        </div>
+    </nav>
+
+    <div style="padding-top: 15vh;">
+        <section class="marketplace section">
+            <div class="marketplace-header gsap-fade">
+                <h2 class="section-title outline" style="font-size: 4rem;">ALL ITEMS</h2>
+                <p style="color: #ccc; margin-top: 1rem; font-size: 1.2rem;">Browse trusted items from verified students.</p>
+                <div class="filter-categories" style="margin-top: 3rem;" id="marketplaceFilters">
+                    <button class="filter-pill active hover-target" data-category="All">All</button>
+                    <button class="filter-pill hover-target" data-category="Bicycles">Bicycles</button>
+                    <button class="filter-pill hover-target" data-category="Textbooks">Textbooks</button>
+                    <button class="filter-pill hover-target" data-category="Electronics">Electronics</button>
+                    <button class="filter-pill hover-target" data-category="Furniture">Furniture</button>
+                    <button class="filter-pill hover-target" data-category="Hobbies">Hobbies</button>
+                </div>
+                
+                <div style="margin-top: 2rem; max-width: 600px; margin-left: auto; margin-right: auto; position: relative;" class="gsap-fade">
+                    <input type="text" id="marketSearch" placeholder="Search for textbooks, laptops, bikes..." style="width: 100%; padding: 1.2rem 1.5rem; border-radius: 50px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.5); color: white; font-size: 1.1rem; outline: none; transition: border-color 0.3s;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='rgba(255,255,255,0.2)'">
+                    <i class="ri-search-line" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); color: #aaa; font-size: 1.2rem;"></i>
+                </div>
+                
+                <div style="margin-top: 1rem; max-width: 800px; margin-left: auto; margin-right: auto; display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;" class="gsap-fade">
+                    <select id="locationFilter" style="padding: 0.8rem 1.2rem; border-radius: 50px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.5); color: white; outline: none; cursor: pointer; flex-grow: 1; max-width: 250px;">
+                        <option value="All">All Locations</option>
+                        <option value="Sadbhawna">Sadbhawna</option>
+                        <option value="Shantikunj">Shantikunj</option>
+                        <option value="Einstein">Einstein</option>
+                        <option value="Rosewood">Rosewood</option>
+                        <option value="Ivory">Ivory</option>
+                        <option value="Chanakya">Chanakya</option>
+                    </select>
+                    <select id="conditionFilter" style="padding: 0.8rem 1.2rem; border-radius: 50px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.5); color: white; outline: none; cursor: pointer; flex-grow: 2; max-width: 450px;">
+                        <option value="All">Any Condition</option>
+                        <option value="Like New (Barely touched before finals)">Like New (Barely touched before finals)</option>
+                        <option value="Used (Has some character & highlighted notes)">Used (Has some character & highlighted notes)</option>
+                        <option value="Desperate Seller (Leaving campus tomorrow, dirt cheap)">Desperate Seller (Leaving campus tomorrow, dirt cheap)</option>
+                    </select>
+                    <select id="sortFilter" style="padding: 0.8rem 1.2rem; border-radius: 50px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.5); color: white; outline: none; cursor: pointer; flex-grow: 1; max-width: 250px;">
+                        <option value="newest">Sort: Newest First</option>
+                        <option value="priceLowHigh">Price: Low to High</option>
+                        <option value="priceHighLow">Price: High to Low</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="marketplace-grid" id="market-items-container">
+                <!-- Items will be loaded by script.js -->
+            </div>
+        </section>
+    </div>
+
+    <!-- Ultimate Campus Footer -->
+    <footer style="background: rgba(0,0,0,0.8); border-top: 1px solid rgba(255,255,255,0.1); padding: 4rem 5vw 2rem; margin-top: 5rem; backdrop-filter: blur(10px);">
+        <div style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 3rem; text-align: left;">
+            
+            <!-- 1. The Campus Pulse -->
+            <div>
+                <h3 style="font-size: 1.5rem; margin-bottom: 1rem; color: var(--accent);"><i class="ri-pulse-line"></i> The Campus Pulse</h3>
+                <div style="background: rgba(255,107,107,0.1); padding: 1rem; border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0; margin-bottom: 1rem;">
+                    <p style="color: white; font-weight: 600;" id="footer-pulse-ticker">🔥 14 items listed in Sadbhawna today!</p>
+                </div>
+                <p style="color: #ccc; font-size: 0.9rem;">Total campus savings this month: <span id="footer-savings-ticker" style="color: #4ade80; font-weight: bold;">₹42,000</span></p>
+            </div>
+
+            <!-- 2. Join the Crew -->
+            <div>
+                <h3 style="font-size: 1.5rem; margin-bottom: 1rem;"><i class="ri-group-line"></i> Join the Crew</h3>
+                <p style="color: #aaa; margin-bottom: 1rem; font-size: 0.95rem;">Want to represent your hostel? Help us grow and earn exclusive campus perks.</p>
+                <a href="#" class="hover-target" style="display: inline-block; padding: 0.6rem 1.2rem; background: transparent; border: 1px solid var(--text-color); color: var(--text-color); text-decoration: none; border-radius: 50px; font-size: 0.9rem; transition: all 0.3s;" onmouseover="this.style.background='var(--text-color)'; this.style.color='#000';" onmouseout="this.style.background='transparent'; this.style.color='var(--text-color)';">Apply to be a Campus Ambassador</a>
+            </div>
+
+            <!-- 3. The Safety Shield -->
+            <div>
+                <h3 style="font-size: 1.5rem; margin-bottom: 1rem;"><i class="ri-shield-check-line"></i> The Safety Shield</h3>
+                <ul style="list-style: none; padding: 0; margin: 0;">
+                    <li style="margin-bottom: 0.8rem;"><a href="#" style="color: #aaa; text-decoration: none; transition: color 0.3s;" class="hover-target" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='#aaa'"><i class="ri-alert-line"></i> Report a Scam</a></li>
+                    <li style="margin-bottom: 0.8rem;"><a href="#" style="color: #aaa; text-decoration: none; transition: color 0.3s;" class="hover-target" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='#aaa'"><i class="ri-forbid-2-line"></i> Restricted Items List</a></li>
+                    <li><a href="#" style="color: #aaa; text-decoration: none; transition: color 0.3s;" class="hover-target" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='#aaa'"><i class="ri-customer-service-2-line"></i> Campus Security Contacts</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 4. Easter Egg / Humor -->
+        <div style="margin-top: 4rem; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.05); text-align: center;">
+            <p style="color: #666; font-size: 0.9rem; font-style: italic; letter-spacing: 0.5px;">
+                "Made with ☕ by students in Punjab, for students. Surviving one semester at a time."
+            </p>
+            <p style="color: #444; font-size: 0.8rem; margin-top: 1rem;">&copy; 2026 Dorm-to-Dorm.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

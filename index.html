@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dorm-to-Dorm | 3D Experience</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Auth Overlay (Login/Signup) -->
+    <div id="auth-overlay" class="auth-overlay">
+        <div class="glass-card auth-card">
+            <h2 class="section-title outline" style="font-size: 3rem; margin-bottom: 1rem; text-align: center;">Dorm2Dorm</h2>
+            <p id="authSubtitle" style="margin-bottom: 2rem; text-align: center; color: #ccc;">Secure login to the campus marketplace.</p>
+            
+            <div id="auth-form-container">
+                <!-- Signup fields (hidden by default) -->
+                <div id="signup-fields" style="display: none;">
+                    <div style="margin-bottom: 1rem; text-align: left;">
+                        <label style="color: #ccc; font-size: 0.9rem; margin-bottom: 0.5rem; display: block;">Choose your Avatar</label>
+                        <div id="emoji-selector" style="display: flex; gap: 10px; justify-content: center; margin-bottom: 1rem;">
+                            <button type="button" class="emoji-btn active" style="font-size: 1.5rem; background: rgba(255,255,255,0.2); border: 2px solid var(--accent); border-radius: 50%; width: 45px; height: 45px; cursor: pointer;">🦊</button>
+                            <button type="button" class="emoji-btn" style="font-size: 1.5rem; background: transparent; border: 2px solid transparent; border-radius: 50%; width: 45px; height: 45px; cursor: pointer;">🐼</button>
+                            <button type="button" class="emoji-btn" style="font-size: 1.5rem; background: transparent; border: 2px solid transparent; border-radius: 50%; width: 45px; height: 45px; cursor: pointer;">🐯</button>
+                            <button type="button" class="emoji-btn" style="font-size: 1.5rem; background: transparent; border: 2px solid transparent; border-radius: 50%; width: 45px; height: 45px; cursor: pointer;">🦉</button>
+                            <button type="button" class="emoji-btn" style="font-size: 1.5rem; background: transparent; border: 2px solid transparent; border-radius: 50%; width: 45px; height: 45px; cursor: pointer;">🐸</button>
+                        </div>
+                    </div>
+                    <input type="text" id="userName" placeholder="Full Name" style="width: 100%; padding: 1rem; border-radius: 8px; border: none; background: rgba(255,255,255,0.1); color: white; margin-bottom: 1rem; font-size: 1.1rem;">
+                    <input type="email" id="userEmail" placeholder="University Email" style="width: 100%; padding: 1rem; border-radius: 8px; border: none; background: rgba(255,255,255,0.1); color: white; margin-bottom: 1rem; font-size: 1.1rem;">
+                    <div style="display: flex; gap: 10px;">
+                        <select id="userWing" style="flex: 2; padding: 1rem; border-radius: 8px; border: none; background: rgba(255,255,255,0.1); color: white; margin-bottom: 1rem; font-size: 1.1rem;">
+                            <option value="" disabled selected>Select Hostel Wing</option>
+                            <option value="Sadbhawna">Sadbhawna</option>
+                            <option value="Shantikunj">Shantikunj</option>
+                            <option value="Einstein">Einstein</option>
+                            <option value="Rosewood">Rosewood</option>
+                            <option value="Ivory">Ivory</option>
+                            <option value="Chanakya">Chanakya</option>
+                        </select>
+                        <input type="text" id="userRoom" placeholder="Room No." style="flex: 1; padding: 1rem; border-radius: 8px; border: none; background: rgba(255,255,255,0.1); color: white; margin-bottom: 1rem; font-size: 1.1rem;">
+                    </div>
+                    <input type="text" id="referralCodeInput" placeholder="Referral Code (Optional)" style="width: 100%; padding: 1rem; border-radius: 8px; border: none; background: rgba(255,255,255,0.1); color: white; margin-bottom: 1rem; font-size: 1.1rem; border: 1px dashed rgba(255,255,255,0.3);">
+                </div>
+
+                <!-- Common fields -->
+                <input type="tel" id="mobileNumber" placeholder="Mobile Number" required style="width: 100%; padding: 1rem; border-radius: 8px; border: none; background: rgba(255,255,255,0.1); color: white; margin-bottom: 1rem; font-size: 1.1rem;">
+                <input type="password" id="userPassword" placeholder="Password" required style="width: 100%; padding: 1rem; border-radius: 8px; border: none; background: rgba(255,255,255,0.1); color: white; margin-bottom: 0.5rem; font-size: 1.1rem;">
+                <p id="passwordHint" style="font-size: 0.75rem; color: #ff6b6b; margin-bottom: 1rem; display: none;">Password must contain at least 1 letter, 1 number, and 1 special character.</p>
+                
+                <button class="btn-primary hover-target" id="authSubmitBtn" style="width: 100%;">Login</button>
+                
+                <p style="margin-top: 1rem; text-align: center; color: var(--text-color); cursor: pointer;" id="toggleAuthMode">Don't have an account? <b>Sign up</b></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Overlay -->
+    <div id="profile-overlay" class="auth-overlay" style="display: none;">
+        <div class="glass-card" style="width: 95%; max-width: 600px; padding: 2.5rem; position: relative; border-radius: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.5);">
+            <button id="closeProfileBtn" class="hover-target" style="position: absolute; top: 1.5rem; right: 1.5rem; background: rgba(255,255,255,0.1); border: none; color: white; font-size: 1.5rem; width: 40px; height: 40px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: background 0.3s;"><i class="ri-close-line"></i></button>
+            
+            <div style="display: flex; align-items: center; gap: 1.5rem; margin-bottom: 2rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 2rem;">
+                <div style="width: 90px; height: 90px; background: linear-gradient(135deg, var(--accent), #ff9a9e); border: 3px solid rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 3.5rem; box-shadow: 0 10px 20px rgba(255,107,107,0.3); position: relative;">
+                    <span id="profileInitials">🦊</span>
+                    <div style="position: absolute; bottom: 0; right: 0; background: #4ade80; width: 24px; height: 24px; border-radius: 50%; border: 3px solid #111; display: flex; align-items: center; justify-content: center; color: #000; font-size: 0.8rem;" title="Verified Student">
+                        <i class="ri-check-line"></i>
+                    </div>
+                </div>
+                <div style="text-align: left; flex-grow: 1;">
+                    <h3 id="profileNameDisplay" style="font-size: 2rem; margin-bottom: 0.2rem; font-weight: 800; letter-spacing: -0.5px;">User Name</h3>
+                    <div style="display: flex; gap: 15px; color: #aaa; font-size: 0.9rem;">
+                        <span id="profileEmailDisplay"><i class="ri-mail-line"></i> user@email.com</span>
+                        <span id="profilePhoneDisplay"><i class="ri-phone-line"></i> +91 0000000000</span>
+                        <span id="profileRoomDisplay"><i class="ri-map-pin-user-line"></i> Room N/A</span>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+                <div style="background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0)); padding: 1.5rem; border-radius: 16px; border: 1px solid rgba(255,107,107,0.3); position: relative; overflow: hidden;">
+                    <div style="position: absolute; top: -20px; right: -20px; font-size: 8rem; opacity: 0.05;"><i class="ri-vip-diamond-line"></i></div>
+                    <p style="color: #ccc; font-size: 0.85rem; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">Your Referral Power</p>
+                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                        <h4 id="profileReferralCodeDisplay" style="font-size: 2.2rem; color: var(--accent); letter-spacing: 3px; font-weight: 900; text-shadow: 0 0 20px rgba(255,107,107,0.5);">XXXXXX</h4>
+                        <button onclick="navigator.clipboard.writeText(document.getElementById('profileReferralCodeDisplay').innerText); alert('Code copied!')" style="background: rgba(255,107,107,0.2); border: 1px solid var(--accent); color: white; padding: 0.5rem 1rem; border-radius: 50px; font-size: 0.8rem; cursor: pointer;" class="hover-target"><i class="ri-file-copy-line"></i> Copy</button>
+                    </div>
+                    <p style="color: #888; font-size: 0.8rem; margin-top: 0.5rem;">Share to earn 100 bonus points! <span style="color: #4ade80; float: right; font-weight: bold; font-size: 0.9rem;" id="profilePointsDisplay">Points: 0</span></p>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+                <div style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 16px; display: flex; flex-direction: column;">
+                    <h3 style="margin-bottom: 1rem; color: var(--accent); display: flex; align-items: center; gap: 8px; font-size: 1.1rem;"><i class="ri-store-2-line"></i> My Store & Leads</h3>
+                    <div id="my-items-list" style="flex-grow: 1; max-height: 250px; overflow-y: auto; text-align: left; padding-right: 5px;">
+                        <p style="color: #666; font-style: italic; font-size: 0.9rem;">No items listed yet.</p>
+                    </div>
+                </div>
+
+                <div style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 16px; display: flex; flex-direction: column;">
+                    <h3 style="margin-bottom: 1rem; color: #4ade80; display: flex; align-items: center; gap: 8px; font-size: 1.1rem;"><i class="ri-shopping-cart-2-line"></i> My Waitlists</h3>
+                    <div id="my-waitlists-list" style="flex-grow: 1; max-height: 250px; overflow-y: auto; text-align: left; padding-right: 5px;">
+                        <p style="color: #666; font-style: italic; font-size: 0.9rem;">You haven't joined any waitlists.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 1rem;">
+                <button id="adminDownloadBtn" class="hover-target" style="display: none; flex: 1; padding: 1rem; background: rgba(74, 222, 128, 0.2); border: 1px solid #4ade80; color: #4ade80; border-radius: 12px; font-size: 1rem; cursor: pointer; font-family: var(--font-family); font-weight: 600; transition: all 0.3s;">
+                    <i class="ri-file-download-line"></i> Export Data
+                </button>
+                <button class="btn-primary hover-target" id="logoutBtn" style="flex: 1; padding: 1rem; border-radius: 12px; font-weight: 600;"><i class="ri-logout-circle-r-line"></i> Secure Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3D WebGL Background -->
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Custom Cursor -->
+    <div class="cursor"></div>
+    <div class="cursor-follower"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo hover-target" style="text-decoration: none; display: flex; align-items: center; gap: 8px;">
+                <div style="background: var(--accent); width: 35px; height: 35px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1.4rem; color: white; transform: rotate(-10deg); box-shadow: 0 4px 15px rgba(255,107,107,0.4);">D</div>
+                <span style="font-size: 1.6rem; font-weight: 800; color: white; letter-spacing: -0.5px;">Dorm<span style="color: var(--accent);">2</span>Dorm</span>
+            </a>
+            <div class="nav-links">
+                <a href="marketplace.html" class="nav-link hover-target">Marketplace</a>
+                <a href="noticeboard.html" class="nav-link hover-target">Drop & Split</a>
+                <a href="sell.html" class="btn-primary hover-target">Sell Item</a>
+                <a href="#" id="navProfileBtn" class="hover-target" style="font-size: 1.5rem; margin-left: 1rem;"><i class="ri-user-smile-fill"></i></a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Smooth Scrolling Content -->
+    <main id="smooth-wrapper">
+        <div id="smooth-content">
+            
+            <!-- Hero Section -->
+            <section class="hero section">
+                <div class="hero-text-wrapper">
+                    <h1 class="hero-title gsap-reveal">TRADE<br>GEAR</h1>
+                    <h1 class="hero-title outline gsap-reveal delay-1">SKIP<br>SHIPPING</h1>
+                    <p class="hero-subtitle gsap-reveal delay-2">The immersive, verified campus-only marketplace.</p>
+                    <button class="btn-large hover-target gsap-reveal delay-3">Explore Marketplace</button>
+                </div>
+            </section>
+
+            <!-- The OLX of Campus Section -->
+            <section class="section" style="text-align: center; padding: 5vw 5vw 2vw 5vw;">
+                <h2 class="section-title gsap-fade" style="font-size: 3rem; margin-bottom: 0.5rem;">The <span style="color: var(--accent);">OLX</span> of Campus</h2>
+                <p class="gsap-fade" style="color: #ccc; font-size: 1.2rem; margin-bottom: 4rem;">Buy, sell, and trade with verified students. No strangers, no scams.</p>
+                
+                <div class="gsap-fade" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 2rem;">
+                    <a href="marketplace.html?category=Bicycles" class="hover-target" style="text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 1rem; width: 120px;">
+                        <div style="width: 100px; height: 100px; border-radius: 50%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-size: 3rem; transition: transform 0.3s, background 0.3s;" onmouseover="this.style.transform='scale(1.1)'; this.style.background='rgba(255,255,255,0.1)';" onmouseout="this.style.transform='scale(1)'; this.style.background='rgba(255,255,255,0.05)';">
+                            🚲
+                        </div>
+                        <span style="color: white; font-weight: 600; font-size: 1.1rem;">Bicycles</span>
+                    </a>
+                    
+                    <!-- Category 2 -->
+                    <a href="marketplace.html?category=Textbooks" class="hover-target" style="text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 1rem; width: 120px;">
+                        <div style="width: 100px; height: 100px; border-radius: 50%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-size: 3rem; transition: transform 0.3s, background 0.3s;" onmouseover="this.style.transform='scale(1.1)'; this.style.background='rgba(255,255,255,0.1)';" onmouseout="this.style.transform='scale(1)'; this.style.background='rgba(255,255,255,0.05)';">
+                            📚
+                        </div>
+                        <span style="color: white; font-weight: 600; font-size: 1.1rem;">Textbooks</span>
+                    </a>
+
+                    <!-- Category 3 -->
+                    <a href="marketplace.html?category=Electronics" class="hover-target" style="text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 1rem; width: 120px;">
+                        <div style="width: 100px; height: 100px; border-radius: 50%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-size: 3rem; transition: transform 0.3s, background 0.3s;" onmouseover="this.style.transform='scale(1.1)'; this.style.background='rgba(255,255,255,0.1)';" onmouseout="this.style.transform='scale(1)'; this.style.background='rgba(255,255,255,0.05)';">
+                            💻
+                        </div>
+                        <span style="color: white; font-weight: 600; font-size: 1.1rem;">Electronics</span>
+                    </a>
+
+                    <!-- Category 4 -->
+                    <a href="marketplace.html?category=Furniture" class="hover-target" style="text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 1rem; width: 120px;">
+                        <div style="width: 100px; height: 100px; border-radius: 50%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-size: 3rem; transition: transform 0.3s, background 0.3s;" onmouseover="this.style.transform='scale(1.1)'; this.style.background='rgba(255,255,255,0.1)';" onmouseout="this.style.transform='scale(1)'; this.style.background='rgba(255,255,255,0.05)';">
+                            🛏️
+                        </div>
+                        <span style="color: white; font-weight: 600; font-size: 1.1rem;">Furniture</span>
+                    </a>
+
+                    <!-- Category 5 -->
+                    <a href="marketplace.html?category=Hobbies" class="hover-target" style="text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 1rem; width: 120px;">
+                        <div style="width: 100px; height: 100px; border-radius: 50%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-size: 3rem; transition: transform 0.3s, background 0.3s;" onmouseover="this.style.transform='scale(1.1)'; this.style.background='rgba(255,255,255,0.1)';" onmouseout="this.style.transform='scale(1)'; this.style.background='rgba(255,255,255,0.05)';">
+                            🎸
+                        </div>
+                        <span style="color: white; font-weight: 600; font-size: 1.1rem;">Hobbies</span>
+                    </a>
+                </div>
+            </section>
+            
+            <!-- Featured 3D Cards Section -->
+            <section class="featured section">
+                <h2 class="section-title gsap-fade">Trending on Campus</h2>
+                <div class="cards-container" id="trending-items-container">
+                    <!-- Javascript will automatically load the newest 3 items here -->
+                </div>
+            </section>
+
+            <section class="marketplace section" style="text-align: center; padding: 10vw 5vw;">
+                <h2 class="section-title outline gsap-fade">THE MARKETPLACE</h2>
+                <p class="gsap-fade" style="font-size: 1.2rem; color: #ccc; max-width: 600px; margin: 0 auto 3rem;">Join thousands of verified students trading safely on campus. No shipping fees, no waiting.</p>
+                <a href="marketplace.html" class="btn-large hover-target gsap-fade" style="display: inline-block; text-decoration: none;">Browse All Items</a>
+            </section>
+
+            <!-- The Ultimate Wing Exchange Leaderboard -->
+            <section class="referral-section section" style="text-align: center; padding: 5vw;">
+                <div class="gsap-fade">
+                    <h2 class="section-title" style="font-size: 3rem; margin-bottom: 0.5rem;"><i class="ri-trophy-fill" style="color: gold;"></i> THE ULTIMATE <span style="color: var(--accent);">WING EXCHANGE</span></h2>
+                    <p style="font-size: 1.2rem; max-width: 800px; margin: 0 auto 2rem; color: #ccc;">
+                        Hostel students, the competition is on! 🏆 The wing with the highest number of successful sign-ups and active marketplace listings wins a <strong>Sponsored Pizza Party</strong> for the entire floor!
+                    </p>
+                    
+                    <div class="glass-card" style="width: 100%; max-width: 700px; margin: 0 auto; padding: 2rem; transform-style: flat; text-align: left;">
+                        <h3 style="margin-bottom: 1.5rem; text-align: center; font-size: 1.8rem; letter-spacing: 1px;">Live Leaderboard</h3>
+                        
+                        <!-- Dynamic Leaderboard Container -->
+                        <div id="leaderboard-container">
+                            <!-- JS will inject leaderboard rows here -->
+                            <div style="display: flex; justify-content: space-between; padding: 1rem; background: rgba(255,215,0,0.15); border: 1px solid rgba(255,215,0,0.5); border-radius: 8px; margin-bottom: 0.8rem;">
+                                <span style="font-weight: 800; font-size: 1.2rem;">🥇 Sadbhawna</span>
+                                <span style="font-weight: bold; color: gold; font-size: 1.2rem;">1,250 pts</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; padding: 1rem; background: rgba(192,192,192,0.1); border: 1px solid rgba(192,192,192,0.3); border-radius: 8px; margin-bottom: 0.8rem;">
+                                <span style="font-weight: 800; font-size: 1.2rem;">🥈 Shantikunj</span>
+                                <span style="font-weight: bold; color: silver; font-size: 1.2rem;">980 pts</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; padding: 1rem; background: rgba(205,127,50,0.1); border: 1px solid rgba(205,127,50,0.3); border-radius: 8px; margin-bottom: 0.8rem;">
+                                <span style="font-weight: 800; font-size: 1.2rem;">🥉 Einstein</span>
+                                <span style="font-weight: bold; color: #cd7f32; font-size: 1.2rem;">740 pts</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; padding: 1rem; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; margin-bottom: 0.8rem;">
+                                <span style="font-weight: 600; font-size: 1.1rem; color: #aaa;">4. Chanakya</span>
+                                <span style="font-weight: 600; color: #aaa; font-size: 1.1rem;">420 pts</span>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-top: 2rem; text-align: center; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem;">
+                            <p style="font-size: 0.9rem; color: #999; margin-bottom: 1rem;">Earn 50 pts per signup • Earn 20 pts per item listed</p>
+                            <button class="btn-primary hover-target" onclick="window.scrollTo(0,0); document.getElementById('toggleAuthMode').click();" style="font-size: 1rem; padding: 0.8rem 1.5rem;">Rally Your Wing & Sign Up!</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Huge Typography Parallax Section -->
+            <section class="parallax-text section">
+                <div class="marquee-wrapper">
+                    <div class="marquee">
+                        <span>ZERO SHIPPING FEES &bull; 100% VERIFIED STUDENTS &bull; SAFE CAMPUS MEETUPS &bull; ZERO SHIPPING FEES &bull; 100% VERIFIED STUDENTS &bull;</span>
+                    </div>
+                </div>
+                <div class="parallax-images">
+                    <div class="p-img p-img-1" data-speed="0.8"></div>
+                    <div class="p-img p-img-2" data-speed="1.2"></div>
+                    <div class="p-img p-img-3" data-speed="0.5"></div>
+                </div>
+            </section>
+
+            <!-- Ultimate Campus Footer -->
+            <footer style="background: rgba(0,0,0,0.8); border-top: 1px solid rgba(255,255,255,0.1); padding: 4rem 5vw 2rem; margin-top: 5rem; backdrop-filter: blur(10px);">
+                <div style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 3rem; text-align: left;">
+                    
+                    <!-- 1. The Campus Pulse -->
+                    <div>
+                        <h3 style="font-size: 1.5rem; margin-bottom: 1rem; color: var(--accent);"><i class="ri-pulse-line"></i> The Campus Pulse</h3>
+                        <div style="background: rgba(255,107,107,0.1); padding: 1rem; border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0; margin-bottom: 1rem;">
+                            <p style="color: white; font-weight: 600;" id="footer-pulse-ticker">🔥 14 items listed in Sadbhawna today!</p>
+                        </div>
+                        <p style="color: #ccc; font-size: 0.9rem;">Total campus savings this month: <span id="footer-savings-ticker" style="color: #4ade80; font-weight: bold;">₹42,000</span></p>
+                    </div>
+
+                    <!-- 2. Join the Crew -->
+                    <div>
+                        <h3 style="font-size: 1.5rem; margin-bottom: 1rem;"><i class="ri-group-line"></i> Join the Crew</h3>
+                        <p style="color: #aaa; margin-bottom: 1rem; font-size: 0.95rem;">Want to represent your hostel? Help us grow and earn exclusive campus perks.</p>
+                        <a href="#" class="hover-target" style="display: inline-block; padding: 0.6rem 1.2rem; background: transparent; border: 1px solid var(--text-color); color: var(--text-color); text-decoration: none; border-radius: 50px; font-size: 0.9rem; transition: all 0.3s;" onmouseover="this.style.background='var(--text-color)'; this.style.color='#000';" onmouseout="this.style.background='transparent'; this.style.color='var(--text-color)';">Apply to be a Campus Ambassador</a>
+                    </div>
+
+                    <!-- 3. The Safety Shield -->
+                    <div>
+                        <h3 style="font-size: 1.5rem; margin-bottom: 1rem;"><i class="ri-shield-check-line"></i> The Safety Shield</h3>
+                        <ul style="list-style: none; padding: 0; margin: 0;">
+                            <li style="margin-bottom: 0.8rem;"><a href="#" style="color: #aaa; text-decoration: none; transition: color 0.3s;" class="hover-target" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='#aaa'"><i class="ri-alert-line"></i> Report a Scam</a></li>
+                            <li style="margin-bottom: 0.8rem;"><a href="#" style="color: #aaa; text-decoration: none; transition: color 0.3s;" class="hover-target" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='#aaa'"><i class="ri-forbid-2-line"></i> Restricted Items List</a></li>
+                            <li><a href="#" style="color: #aaa; text-decoration: none; transition: color 0.3s;" class="hover-target" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='#aaa'"><i class="ri-customer-service-2-line"></i> Campus Security Contacts</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- 4. Easter Egg / Humor -->
+                <div style="margin-top: 4rem; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.05); text-align: center;">
+                    <p style="color: #666; font-size: 0.9rem; font-style: italic; letter-spacing: 0.5px;">
+                        "Made with ☕ by students in Punjab, for students. Surviving one semester at a time."
+                    </p>
+                    <p style="color: #444; font-size: 0.8rem; margin-top: 1rem;">&copy; 2026 Dorm-to-Dorm.</p>
+                </div>
+            </footer>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <!-- GSAP for animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <!-- Lenis for smooth scrolling -->
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.33/dist/lenis.min.js"></script>
+    <!-- Vanilla Tilt for 3D Cards -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
+    <!-- Three.js for WebGL Background -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <script src="script.js"></script>
+</body>
+</html>

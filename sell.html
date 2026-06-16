@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sell an Item - Dorm2Dorm</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        .sell-hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10vw 5vw;
+        }
+        .sell-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            max-width: 1200px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 4rem;
+            backdrop-filter: blur(20px);
+            transform-style: preserve-3d;
+        }
+        .sell-info h1 {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(to right, #fff, var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #ccc;
+            font-weight: 600;
+        }
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 1.2rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            font-family: var(--font-family);
+            font-size: 1.1rem;
+            transition: border-color 0.3s ease;
+        }
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+    </style>
+</head>
+<body style="cursor: auto;">
+    <canvas id="bg-canvas"></canvas>
+    
+    <nav class="navbar" style="position: fixed; top: 0; width: 100%; z-index: 100; padding: 1.5rem 5vw;">
+        <div class="nav-content" style="display: flex; justify-content: space-between; align-items: center;">
+            <a href="index.html" class="logo hover-target" style="text-decoration: none; display: flex; align-items: center; gap: 8px;">
+                <div style="background: var(--accent); width: 35px; height: 35px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1.4rem; color: white; transform: rotate(-10deg); box-shadow: 0 4px 15px rgba(255,107,107,0.4);">D</div>
+                <span style="font-size: 1.6rem; font-weight: 800; color: white; letter-spacing: -0.5px;">Dorm<span style="color: var(--accent);">2</span>Dorm</span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link hover-target">Home</a>
+                <a href="marketplace.html" class="nav-link hover-target">Marketplace</a>
+                <a href="noticeboard.html" class="nav-link hover-target" style="color: #4ade80;">Drop & Split</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="sell-hero">
+        <div class="sell-container" data-tilt data-tilt-max="5" data-tilt-speed="400">
+            <div class="sell-info" style="transform: translateZ(50px);">
+                <h1>Turn Clutter<br>into Cash.</h1>
+                <p style="font-size: 1.2rem; color: #aaa; margin-bottom: 2rem; line-height: 1.6;">Selling your used university gear has never been easier. Just snap a pic, set a price in Rupees, and let the campus buy it from you.</p>
+                <div style="display: flex; gap: 1rem; align-items: center; background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 12px;">
+                    <i class="ri-shield-check-fill" style="color: var(--accent); font-size: 2rem;"></i>
+                    <p style="font-size: 0.9rem;">100% Verified Students. Safe on-campus transactions.</p>
+                </div>
+            </div>
+            
+            <div class="sell-form" style="transform: translateZ(30px);">
+                <form id="sellItemForm">
+                    <div class="input-group">
+                        <label>What are you selling?</label>
+                        <input type="text" id="itemName" placeholder="e.g. Casio Scientific Calculator" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Listing Type</label>
+                        <select id="listingType" onchange="toggleRentFields()">
+                            <option value="Sell">Sell Permanently</option>
+                            <option value="Rent">Rent Temporarily</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Category</label>
+                        <select id="itemCategory">
+                            <option value="Textbooks">Textbooks & Academics</option>
+                            <option value="Electronics">Electronics</option>
+                            <option value="Furniture">Dorm Setup & Furniture</option>
+                            <option value="Bicycles">Bicycles & Vehicles</option>
+                            <option value="Hobbies">Instruments & Hobbies</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Condition</label>
+                        <select id="itemCondition">
+                            <option value="Like New (Barely touched before finals)">Like New (Barely touched before finals)</option>
+                            <option value="Used (Has some character & highlighted notes)">Used (Has some character & highlighted notes)</option>
+                            <option value="Desperate Seller (Leaving campus tomorrow, dirt cheap)">Desperate Seller (Leaving campus tomorrow, dirt cheap)</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Listing Lifespan</label>
+                        <select id="itemLifespan">
+                            <option value="3">3 Days (Quick Sale)</option>
+                            <option value="7">1 Week</option>
+                            <option value="90">Until End of Semester</option>
+                        </select>
+                    </div>
+                    <div class="input-group" style="display: flex; gap: 1rem;">
+                        <div style="flex: 1;">
+                            <label id="priceLabel">Price (₹)</label>
+                            <input type="number" id="itemPrice" placeholder="e.g. 450" required>
+                        </div>
+                        <div style="flex: 1; display: none;" id="rentDurationDiv">
+                            <label>Per</label>
+                            <select id="rentDuration">
+                                <option value="Day">Day</option>
+                                <option value="Week">Week</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="input-group" id="depositDiv" style="display: none; background: rgba(147, 51, 234, 0.1); padding: 1rem; border-radius: 8px; border: 1px solid rgba(147, 51, 234, 0.3);">
+                        <label style="color: #c084fc;"><i class="ri-lock-line"></i> Escrow Security Deposit (₹)</label>
+                        <p style="font-size: 0.8rem; color: #aaa; margin-bottom: 0.5rem;">Fully refunded to borrower once item is returned.</p>
+                        <input type="number" id="securityDeposit" placeholder="e.g. 1000">
+                    </div>
+                    <div class="input-group" id="imageInputsContainer">
+                        <label>Image URLs</label>
+                        <div style="margin-bottom: 10px;">
+                            <input type="url" class="item-image-input" placeholder="https://... (Main Image)" required style="width: 100%; padding: 1rem; border-radius: 8px; border: none; background: rgba(255,255,255,0.1); color: white; margin-bottom: 0.5rem; font-size: 1.1rem;">
+                        </div>
+                    </div>
+                    <button type="button" onclick="addAnotherImage()" class="hover-target" style="background: transparent; color: var(--accent); border: 1px dashed var(--accent); padding: 0.8rem; border-radius: 8px; width: 100%; margin-bottom: 1rem; cursor: pointer; font-size: 1rem;"><i class="ri-image-add-line"></i> Add Another Image</button>
+                    <button type="submit" class="btn-primary hover-target" style="width: 100%; margin-top: 1rem; font-size: 1.2rem; padding: 1.2rem;">Post to Marketplace</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ultimate Campus Footer -->
+    <footer style="background: rgba(0,0,0,0.8); border-top: 1px solid rgba(255,255,255,0.1); padding: 4rem 5vw 2rem; margin-top: 5rem; backdrop-filter: blur(10px);">
+        <div style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 3rem; text-align: left;">
+            
+            <!-- 1. The Campus Pulse -->
+            <div>
+                <h3 style="font-size: 1.5rem; margin-bottom: 1rem; color: var(--accent);"><i class="ri-pulse-line"></i> The Campus Pulse</h3>
+                <div style="background: rgba(255,107,107,0.1); padding: 1rem; border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0; margin-bottom: 1rem;">
+                    <p style="color: white; font-weight: 600;" id="footer-pulse-ticker">🔥 14 items listed in Sadbhawna today!</p>
+                </div>
+                <p style="color: #ccc; font-size: 0.9rem;">Total campus savings this month: <span id="footer-savings-ticker" style="color: #4ade80; font-weight: bold;">₹42,000</span></p>
+            </div>
+
+            <!-- 2. Join the Crew -->
+            <div>
+                <h3 style="font-size: 1.5rem; margin-bottom: 1rem;"><i class="ri-group-line"></i> Join the Crew</h3>
+                <p style="color: #aaa; margin-bottom: 1rem; font-size: 0.95rem;">Want to represent your hostel? Help us grow and earn exclusive campus perks.</p>
+                <a href="#" class="hover-target" style="display: inline-block; padding: 0.6rem 1.2rem; background: transparent; border: 1px solid var(--text-color); color: var(--text-color); text-decoration: none; border-radius: 50px; font-size: 0.9rem; transition: all 0.3s;" onmouseover="this.style.background='var(--text-color)'; this.style.color='#000';" onmouseout="this.style.background='transparent'; this.style.color='var(--text-color)';">Apply to be a Campus Ambassador</a>
+            </div>
+
+            <!-- 3. The Safety Shield -->
+            <div>
+                <h3 style="font-size: 1.5rem; margin-bottom: 1rem;"><i class="ri-shield-check-line"></i> The Safety Shield</h3>
+                <ul style="list-style: none; padding: 0; margin: 0;">
+                    <li style="margin-bottom: 0.8rem;"><a href="#" style="color: #aaa; text-decoration: none; transition: color 0.3s;" class="hover-target" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='#aaa'"><i class="ri-alert-line"></i> Report a Scam</a></li>
+                    <li style="margin-bottom: 0.8rem;"><a href="#" style="color: #aaa; text-decoration: none; transition: color 0.3s;" class="hover-target" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='#aaa'"><i class="ri-forbid-2-line"></i> Restricted Items List</a></li>
+                    <li><a href="#" style="color: #aaa; text-decoration: none; transition: color 0.3s;" class="hover-target" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='#aaa'"><i class="ri-customer-service-2-line"></i> Campus Security Contacts</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 4. Easter Egg / Humor -->
+        <div style="margin-top: 4rem; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.05); text-align: center;">
+            <p style="color: #666; font-size: 0.9rem; font-style: italic; letter-spacing: 0.5px;">
+                "Made with ☕ by students in Punjab, for students. Surviving one semester at a time."
+            </p>
+            <p style="color: #444; font-size: 0.8rem; margin-top: 1rem;">&copy; 2026 Dorm-to-Dorm.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
+    <script src="script.js"></script>
+    <script>
+        function toggleRentFields() {
+            const type = document.getElementById('listingType').value;
+            const rentDurationDiv = document.getElementById('rentDurationDiv');
+            const depositDiv = document.getElementById('depositDiv');
+            const priceLabel = document.getElementById('priceLabel');
+            
+            if (type === 'Rent') {
+                rentDurationDiv.style.display = 'block';
+                depositDiv.style.display = 'block';
+                priceLabel.innerText = 'Rental Price (₹)';
+                document.getElementById('securityDeposit').required = true;
+            } else {
+                rentDurationDiv.style.display = 'none';
+                depositDiv.style.display = 'none';
+                priceLabel.innerText = 'Price (₹)';
+                document.getElementById('securityDeposit').required = false;
+            }
+        }
+
+        function addAnotherImage() {
+            const container = document.getElementById('imageInputsContainer');
+            const numInputs = container.querySelectorAll('.item-image-input').length;
+            if (numInputs >= 4) {
+                alert("Maximum 4 images allowed!");
+                return;
+            }
+            const div = document.createElement('div');
+            div.style.marginBottom = '10px';
+            div.innerHTML = `<input type="url" class="item-image-input" placeholder="https://... (Additional Image)" style="width: 100%; padding: 1rem; border-radius: 8px; border: none; background: rgba(255,255,255,0.1); color: white; margin-bottom: 0.5rem; font-size: 1.1rem;">`;
+            container.appendChild(div);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drop & Split - Dorm2Dorm</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        .notice-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+        @media (max-width: 768px) {
+            .notice-container { grid-template-columns: 1fr; }
+        }
+        .notice-board {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 2rem;
+            backdrop-filter: blur(20px);
+            min-height: 500px;
+        }
+        .notice-card {
+            background: rgba(0, 0, 0, 0.4);
+            border-left: 4px solid var(--accent);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: transform 0.3s ease;
+        }
+        .notice-card:hover {
+            transform: translateY(-2px);
+        }
+        .notice-card.roommate-card {
+            border-left: 4px solid #4ade80;
+        }
+        .input-group { margin-bottom: 1rem; }
+        .input-group input, .input-group select, .input-group textarea {
+            width: 100%; padding: 1rem; border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(0, 0, 0, 0.5); color: white;
+            font-family: var(--font-family); font-size: 1rem;
+        }
+    </style>
+</head>
+<body style="cursor: auto;">
+    <canvas id="bg-canvas"></canvas>
+    
+    <nav class="navbar" style="position: fixed; top: 0; width: 100%; z-index: 100; padding: 1.5rem 5vw;">
+        <div class="nav-content" style="display: flex; justify-content: space-between; align-items: center;">
+            <a href="index.html" class="logo hover-target" style="text-decoration: none; display: flex; align-items: center; gap: 8px;">
+                <div style="background: var(--accent); width: 35px; height: 35px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1.4rem; color: white; transform: rotate(-10deg); box-shadow: 0 4px 15px rgba(255,107,107,0.4);">D</div>
+                <span style="font-size: 1.6rem; font-weight: 800; color: white; letter-spacing: -0.5px;">Dorm<span style="color: var(--accent);">2</span>Dorm</span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link hover-target">Home</a>
+                <a href="marketplace.html" class="nav-link hover-target">Marketplace</a>
+                <a href="sell.html" class="btn-primary hover-target">Sell Item</a>
+            </div>
+        </div>
+    </nav>
+
+    <div style="padding-top: 15vh; padding-bottom: 5vh;">
+        <section class="section" style="text-align: center;">
+            <div class="gsap-fade">
+                <h2 class="section-title outline" style="font-size: 4rem;">Drop & Split</h2>
+                <p style="color: #ccc; margin-top: 1rem; font-size: 1.2rem; max-width: 600px; margin-inline: auto;">
+                    Don't want to buy a permanent item? Split a delivery fee with your hostel block or find your perfect roommate based on vibe checks.
+                </p>
+                <button onclick="document.getElementById('postNoticeModal').style.display='flex';" class="btn-primary hover-target" style="margin-top: 2rem; font-size: 1.1rem; padding: 1rem 2rem;">+ Post a Notice</button>
+            </div>
+            
+            <div class="notice-container" style="margin-top: 4rem; text-align: left;">
+                
+                <!-- Delivery Splits Board -->
+                <div class="notice-board gsap-fade">
+                    <h3 style="font-size: 1.8rem; margin-bottom: 1.5rem; color: var(--accent); display: flex; align-items: center; gap: 10px;">
+                        <i class="ri-takeaway-line"></i> Delivery Splits
+                    </h3>
+                    <div id="deliveryBoard">
+                        <p style="color: #666; font-style: italic;">Loading notices...</p>
+                    </div>
+                </div>
+
+                <!-- Roommate Finder Board -->
+                <div class="notice-board gsap-fade">
+                    <h3 style="font-size: 1.8rem; margin-bottom: 1.5rem; color: #4ade80; display: flex; align-items: center; gap: 10px;">
+                        <i class="ri-user-add-line"></i> Roommate Finder
+                    </h3>
+                    <div id="roommateBoard">
+                        <p style="color: #666; font-style: italic;">Loading notices...</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </div>
+
+    <!-- Post Notice Modal -->
+    <div id="postNoticeModal" class="auth-overlay" style="display: none;">
+        <div class="glass-card" style="width: 90%; max-width: 500px; padding: 2.5rem; position: relative;">
+            <button onclick="document.getElementById('postNoticeModal').style.display='none';" class="hover-target" style="position: absolute; top: 1rem; right: 1rem; background: transparent; border: none; color: white; font-size: 2rem; cursor: pointer;"><i class="ri-close-line"></i></button>
+            <h2 style="font-size: 2rem; margin-bottom: 1.5rem;">Post to Notice Board</h2>
+            
+            <form id="noticeForm">
+                <div class="input-group">
+                    <label style="display:block; margin-bottom: 0.5rem; color: #ccc;">Notice Type</label>
+                    <select id="noticeType" required onchange="toggleNoticeFields()">
+                        <option value="Delivery">Delivery Split (Food/Groceries)</option>
+                        <option value="Roommate">Roommate Finder / Room Swap</option>
+                    </select>
+                </div>
+                
+                <div class="input-group">
+                    <label style="display:block; margin-bottom: 0.5rem; color: #ccc;">Hostel Block / Wing</label>
+                    <select id="noticeWing" required>
+                        <option value="Sadbhawna">Sadbhawna</option>
+                        <option value="Shantikunj">Shantikunj</option>
+                        <option value="Einstein">Einstein</option>
+                        <option value="Rosewood">Rosewood</option>
+                        <option value="Ivory">Ivory</option>
+                        <option value="Chanakya">Chanakya</option>
+                        <option value="Campus Wide">Campus Wide</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label style="display:block; margin-bottom: 0.5rem; color: #ccc;">Details</label>
+                    <textarea id="noticeMessage" rows="3" placeholder="e.g. Ordering from Swiggy Instamart, need someone to split the ₹80 delivery fee." required></textarea>
+                </div>
+
+                <!-- Roommate specific fields -->
+                <div id="roommateFields" style="display: none; background: rgba(74, 222, 128, 0.1); padding: 1rem; border-radius: 8px; margin-bottom: 1rem; border: 1px solid rgba(74, 222, 128, 0.3);">
+                    <div class="input-group">
+                        <label style="display:block; margin-bottom: 0.5rem; color: #ccc;">Vibe Check</label>
+                        <input type="text" id="noticeVibe" placeholder="e.g. Gamer, Late sleeper, Needs silence to study">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary hover-target" style="width: 100%; margin-top: 1rem; font-size: 1.1rem; padding: 1rem;">Post Notice</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Ultimate Campus Footer -->
+    <footer style="background: rgba(0,0,0,0.8); border-top: 1px solid rgba(255,255,255,0.1); padding: 4rem 5vw 2rem; margin-top: 5rem; backdrop-filter: blur(10px);">
+        <div style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 3rem; text-align: left;">
+            <div>
+                <h3 style="font-size: 1.5rem; margin-bottom: 1rem; color: var(--accent);"><i class="ri-pulse-line"></i> The Campus Pulse</h3>
+                <div style="background: rgba(255,107,107,0.1); padding: 1rem; border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0; margin-bottom: 1rem;">
+                    <p style="color: white; font-weight: 600;" id="footer-pulse-ticker">🔥 Loading active items...</p>
+                </div>
+                <p style="color: #ccc; font-size: 0.9rem;">Total campus savings this month: <span id="footer-savings-ticker" style="color: #4ade80; font-weight: bold;">₹0</span></p>
+            </div>
+            <div>
+                <h3 style="font-size: 1.5rem; margin-bottom: 1rem;"><i class="ri-group-line"></i> Join the Crew</h3>
+                <p style="color: #aaa; margin-bottom: 1rem; font-size: 0.95rem;">Want to represent your hostel? Help us grow and earn exclusive campus perks.</p>
+                <a href="#" class="hover-target" style="display: inline-block; padding: 0.6rem 1.2rem; background: transparent; border: 1px solid var(--text-color); color: var(--text-color); text-decoration: none; border-radius: 50px; font-size: 0.9rem; transition: all 0.3s;" onmouseover="this.style.background='var(--text-color)'; this.style.color='#000';" onmouseout="this.style.background='transparent'; this.style.color='var(--text-color)';">Apply to be a Campus Ambassador</a>
+            </div>
+            <div>
+                <h3 style="font-size: 1.5rem; margin-bottom: 1rem;"><i class="ri-shield-check-line"></i> The Safety Shield</h3>
+                <ul style="list-style: none; padding: 0; margin: 0;">
+                    <li style="margin-bottom: 0.8rem;"><a href="#" style="color: #aaa; text-decoration: none; transition: color 0.3s;"><i class="ri-alert-line"></i> Report a Scam</a></li>
+                    <li style="margin-bottom: 0.8rem;"><a href="#" style="color: #aaa; text-decoration: none; transition: color 0.3s;"><i class="ri-forbid-2-line"></i> Restricted Items List</a></li>
+                    <li><a href="#" style="color: #aaa; text-decoration: none; transition: color 0.3s;"><i class="ri-customer-service-2-line"></i> Campus Security Contacts</a></li>
+                </ul>
+            </div>
+        </div>
+        <div style="margin-top: 4rem; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.05); text-align: center;">
+            <p style="color: #666; font-size: 0.9rem; font-style: italic; letter-spacing: 0.5px;">
+                "Made with ☕ by students in Punjab, for students. Surviving one semester at a time."
+            </p>
+            <p style="color: #444; font-size: 0.8rem; margin-top: 1rem;">&copy; 2026 Dorm-to-Dorm.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <!-- GSAP for animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <!-- Lenis for smooth scrolling -->
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.33/dist/lenis.min.js"></script>
+    <!-- Vanilla Tilt for 3D Cards -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
+    <!-- Three.js for WebGL Background -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <script src="script.js"></script>
+    <script>
+        function toggleNoticeFields() {
+            const type = document.getElementById('noticeType').value;
+            const roommateFields = document.getElementById('roommateFields');
+            if (type === 'Roommate') {
+                roommateFields.style.display = 'block';
+                document.getElementById('noticeMessage').placeholder = "e.g. Looking for a roommate for next semester in a 2-seater room.";
+            } else {
+                roommateFields.style.display = 'none';
+                document.getElementById('noticeMessage').placeholder = "e.g. Ordering from Swiggy Instamart, need someone to split the ₹80 delivery fee.";
+            }
+        }
+    </script>
+</body>
+</html>
