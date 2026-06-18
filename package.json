@@ -1,0 +1,21 @@
+{
+  "name": "dorm-to-dorm-marketplace",
+  "version": "1.0.0",
+  "description": "Dorm-to-Dorm Campus Marketplace",
+  "type": "module",
+  "scripts": {
+    "dev": "npx serve .",
+    "build": "echo 'Static site - no build needed'",
+    "lint": "echo 'No linter configured'"
+  },
+  "keywords": [
+    "marketplace",
+    "campus",
+    "dorm"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@vercel/analytics": "^1.4.1"
+  }
+}
