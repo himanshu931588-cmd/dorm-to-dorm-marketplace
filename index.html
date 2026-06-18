@@ -15,7 +15,7 @@
             <h2 class="section-title outline" style="font-size: 3rem; margin-bottom: 1rem; text-align: center;">Dorm2Dorm</h2>
             <p id="authSubtitle" style="margin-bottom: 2rem; text-align: center; color: #ccc;">Secure login to the campus marketplace.</p>
             
-            <div id="auth-form-container">
+            <form id="auth-form-container">
                 <!-- Signup fields (hidden by default) -->
                 <div id="signup-fields" style="display: none;">
                     <div style="margin-bottom: 1rem; text-align: left;">
@@ -46,14 +46,14 @@
                 </div>
 
                 <!-- Common fields -->
-                <input type="tel" id="mobileNumber" placeholder="Mobile Number" required style="width: 100%; padding: 1rem; border-radius: 8px; border: none; background: rgba(255,255,255,0.1); color: white; margin-bottom: 1rem; font-size: 1.1rem;">
-                <input type="password" id="userPassword" placeholder="Password" required style="width: 100%; padding: 1rem; border-radius: 8px; border: none; background: rgba(255,255,255,0.1); color: white; margin-bottom: 0.5rem; font-size: 1.1rem;">
+                <input type="tel" id="mobileNumber" name="username" autocomplete="username" placeholder="Mobile Number" required style="width: 100%; padding: 1rem; border-radius: 8px; border: none; background: rgba(255,255,255,0.1); color: white; margin-bottom: 1rem; font-size: 1.1rem;">
+                <input type="password" id="userPassword" name="password" autocomplete="current-password" placeholder="Password" required style="width: 100%; padding: 1rem; border-radius: 8px; border: none; background: rgba(255,255,255,0.1); color: white; margin-bottom: 0.5rem; font-size: 1.1rem;">
                 <p id="passwordHint" style="font-size: 0.75rem; color: #ff6b6b; margin-bottom: 1rem; display: none;">Password must contain at least 1 letter, 1 number, and 1 special character.</p>
                 
-                <button class="btn-primary hover-target" id="authSubmitBtn" style="width: 100%;">Login</button>
+                <button type="submit" class="btn-primary hover-target" id="authSubmitBtn" style="width: 100%;">Login</button>
                 
                 <p style="margin-top: 1rem; text-align: center; color: var(--text-color); cursor: pointer;" id="toggleAuthMode">Don't have an account? <b>Sign up</b></p>
-            </div>
+            </form>
         </div>
     </div>
 

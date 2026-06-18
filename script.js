@@ -822,8 +822,10 @@ if (toggleAuthMode) {
     });
 }
 
-if (authSubmitBtn) {
-    authSubmitBtn.addEventListener('click', () => {
+const authFormContainer = document.getElementById('auth-form-container');
+if (authFormContainer) {
+    authFormContainer.addEventListener('submit', (e) => {
+        e.preventDefault();
         const mobile = mobileNumber.value.trim();
         const pass = userPassword.value.trim();
 
