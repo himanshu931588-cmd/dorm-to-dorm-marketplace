@@ -27,8 +27,13 @@ body {
     cursor: none; /* Custom cursor for background */
 }
 
-input, button, a {
+input, button, a, select {
     cursor: auto;
+}
+
+select option {
+    color: black;
+    background: white;
 }
 
 button, a {
@@ -482,7 +487,7 @@ footer {
 
 .auth-card {
     width: 90%;
-    max-width: 400px;
+    max-width: 600px;
     height: auto;
     padding: 3rem 2rem;
     display: flex;

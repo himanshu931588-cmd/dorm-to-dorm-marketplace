@@ -37,8 +37,10 @@ window.addEventListener('mousemove', (e) => {
     mouseY = e.clientY;
     
     // Immediate update for the small dot
-    cursor.style.left = mouseX + 'px';
-    cursor.style.top = mouseY + 'px';
+    if (cursor) {
+        cursor.style.left = mouseX + 'px';
+        cursor.style.top = mouseY + 'px';
+    }
 });
 
 // Animate follower for smooth lagging effect
@@ -46,8 +48,10 @@ gsap.ticker.add(() => {
     followerX += (mouseX - followerX) * 0.15;
     followerY += (mouseY - followerY) * 0.15;
     
-    cursorFollower.style.left = followerX + 'px';
-    cursorFollower.style.top = followerY + 'px';
+    if (cursorFollower) {
+        cursorFollower.style.left = followerX + 'px';
+        cursorFollower.style.top = followerY + 'px';
+    }
 });
 
 hoverTargets.forEach(target => {
@@ -87,18 +91,20 @@ gsap.utils.toArray('.gsap-fade').forEach(element => {
 
 // Marquee text scrolling based on scroll direction
 const marquee = document.querySelector('.marquee');
-let mm = gsap.matchMedia();
+if (marquee) {
+    let mm = gsap.matchMedia();
 
-gsap.to(marquee, {
-    xPercent: -20,
-    ease: "none",
-    scrollTrigger: {
-        trigger: ".parallax-text",
-        start: "top bottom",
-        end: "bottom top",
-        scrub: 1
-    }
-});
+    gsap.to(marquee, {
+        xPercent: -20,
+        ease: "none",
+        scrollTrigger: {
+            trigger: ".parallax-text",
+            start: "top bottom",
+            end: "bottom top",
+            scrub: 1
+        }
+    });
+}
 
 // Parallax Images
 gsap.utils.toArray('.p-img').forEach(img => {
